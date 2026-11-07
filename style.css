@@ -88,3 +88,11 @@ body{min-height:100vh;background:radial-gradient(ellipse at 8% 4%,#f4dfca80 0,tr
 .honors-details summary:hover{background:#eee2d0}
 #drawer .actions{background:#fffbf5}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Light warm tints for project surfaces. */
+.project-categories{background:#f6eddf;border-color:#e7d9c5}
+.projects .project[data-project-category=internship]{background:#fff3e5;border-color:#ead8bf}
+.projects .project[data-project-category=competition]{background:#fff0eb;border-color:#ecd8ce}
+.projects .project[data-project-category=exploration]{background:#faf3e3;border-color:#e5dbc2}
+.project-category-buttons button:not([aria-pressed=true]):hover{background:#eee2ce}
+.projects .project .project-detail{border-top-color:#e4d7c6}
