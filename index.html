@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'self'">
 <meta name="theme-color" content="#faf9f5">
 <title>xu · 徐鸣杰的个人主页</title>
-<link rel="stylesheet" href="./style.css?v=pages-2">
+<link rel="stylesheet" href="./style.css?v=private-2">
 <body>
 <div id="top">
 <header>
@@ -169,9 +169,13 @@
 <select id="filter" aria-label="分类">
 <option>全部分类</option>
 </select>
+<p id="journal-count" class="writer-note" aria-live="polite"></p>
 <div id="entries" aria-live="polite">
 </div>
-<button data-open="true">写一篇随笔</button>
+<div id="journal-pagination" class="journal-pagination" hidden aria-label="随笔分页">
+<button id="journal-prev" type="button">上一页</button><span id="journal-page" aria-live="polite"></span><button id="journal-next" type="button">下一页</button>
+</div>
+<div class="journal-actions"><button data-open="true">写一篇随笔</button><button id="archive-toggle" type="button" aria-expanded="false" aria-controls="entries" hidden>全部随笔</button></div>
 </section>
 <section class="future">
 <div>
@@ -261,7 +265,7 @@
 <p id="status" role="status" aria-live="polite">
 </p>
 </aside>
-<script type="module" src="./app.js?v=private-1">
+<script type="module" src="./app.js?v=private-2">
 </script>
 </body>
 </html>

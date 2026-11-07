@@ -22,3 +22,5 @@
 @media(max-width:900px){.hero{grid-template-columns:minmax(0,1.4fr) minmax(220px,1fr)}.orbit{width:220px}.orbit-two,.orbit-three{width:220px}.art-center{font-size:92px}}
 @media(max-width:740px){.hero{grid-template-columns:1fr;gap:12px}.orbit-art{height:250px;width:min(100%,360px);justify-self:center}.art-center{font-size:100px}}
 .writing .hero{grid-template-columns:1fr}.writing .orbit-art{height:230px;width:min(100%,360px);justify-self:center}
+
+.journal-actions,.journal-pagination{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-top:1rem}.journal-pagination{margin-bottom:1rem}#journal-count:empty{display:none}#archive-toggle{background:transparent;color:var(--green)}

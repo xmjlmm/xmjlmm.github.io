@@ -6,6 +6,9 @@ let drafts = [];
 let current = null;
 let dirty = false;
 let busy = false;
+let archiveOpen = false;
+let journalPage = 0;
+const journalPageSize = 8;
 const status = message => $('status').textContent = message;
 
 function readDrafts() {
@@ -49,7 +52,21 @@ function render() {
   const box = $('entries');
   box.replaceChildren();
   const query = $('search').value.toLowerCase().trim();
-  for (const post of posts.filter(item => (!$('filter').value || item.category === $('filter').value) && (item.title + item.content).toLowerCase().includes(query))) {
+  const searching = Boolean(query || $('filter').value);
+  const matches = posts.filter(item => (!$('filter').value || item.category === $('filter').value) && (item.title + item.content).toLowerCase().includes(query));
+  const paginated = archiveOpen || searching;
+  const pageCount = Math.max(1, Math.ceil(matches.length / journalPageSize));
+  journalPage = Math.min(journalPage, pageCount - 1);
+  const visible = paginated ? matches.slice(journalPage * journalPageSize, (journalPage + 1) * journalPageSize) : matches.slice(0, 3);
+  $('archive-toggle').hidden = posts.length <= 3 || searching;
+  $('archive-toggle').textContent = archiveOpen ? '收起全部随笔' : '全部随笔（' + posts.length + ' 篇）';
+  $('archive-toggle').setAttribute('aria-expanded', String(archiveOpen));
+  $('journal-pagination').hidden = !paginated || matches.length <= journalPageSize;
+  $('journal-page').textContent = (journalPage + 1) + ' / ' + pageCount;
+  $('journal-prev').disabled = journalPage === 0;
+  $('journal-next').disabled = journalPage === pageCount - 1;
+  $('journal-count').textContent = searching ? '找到 ' + matches.length + ' 篇随笔' : archiveOpen ? '全部随笔 · ' + posts.length + ' 篇' : posts.length > 3 ? '最近 3 篇 · 共 ' + posts.length + ' 篇' : '';
+  for (const post of visible) {
     const details = element('details', '');
     details.className = 'entry';
     details.id = 'post-' + post.id;
@@ -199,14 +216,30 @@ $('copy').onclick = async () => {
   try { await navigator.clipboard.writeText('2651094755'); $('copy').textContent = 'QQ　2651094755　已复制'; }
   catch { $('copy').textContent = 'QQ　2651094755　请手动复制'; }
 };
-$('search').oninput = render;
-$('filter').onchange = render;
+function resetJournalPage() {
+  journalPage = 0;
+  render();
+}
+$('search').oninput = resetJournalPage;
+$('filter').onchange = resetJournalPage;
+$('archive-toggle').onclick = () => {
+  archiveOpen = !archiveOpen;
+  resetJournalPage();
+};
+$('journal-prev').onclick = () => { journalPage--; render(); };
+$('journal-next').onclick = () => { journalPage++; render(); };
+
 window.addEventListener('beforeunload', event => { if (dirty || busy) { event.preventDefault(); event.returnValue = ''; } });
 window.addEventListener('storage', event => {
   if (event.key !== storageKey) return;
   try { drafts = readDrafts(); rebuildLibrary(); status('另一窗口更新了随笔。请核对后继续编辑。'); } catch (error) { status(error.message); }
 });
 try { drafts = readDrafts(); } catch (error) { status('浏览器随笔读取失败：' + error.message); }
+const linkedIndex = sortPosts([...drafts]).findIndex(post => '#post-' + post.id === location.hash);
+if (linkedIndex >= 3) {
+  archiveOpen = true;
+  journalPage = Math.floor(linkedIndex / journalPageSize);
+}
 rebuildLibrary();
 if (location.hash.startsWith('#post-')) document.getElementById(location.hash.slice(1))?.scrollIntoView();
 if (new URLSearchParams(location.search).has('edit')) openDrawer();
