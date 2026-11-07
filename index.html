@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'self'">
 <meta name="theme-color" content="#faf9f5">
 <title>xu · 徐鸣杰的个人主页</title>
-<link rel="stylesheet" href="./style.css?v=projects-1">
+<link rel="stylesheet" href="./style.css?v=reader-1">
 <body>
 <div id="top">
 <header>
@@ -249,12 +249,13 @@
 <footer>© xu · 徐鸣杰 <a href="https://github.com/xmjlmm">GitHub ↗</a>
 </footer>
 </div>
-<aside id="drawer" hidden aria-label="随笔编辑器">
+<aside id="drawer" hidden aria-label="随笔阅读与编辑">
 <div class="bar">
-<h2>写随笔</h2>
+<h2 id="drawer-heading">写随笔</h2>
 <button id="close">关闭</button>
 </div>
-<p class="writer-note">随笔保存在当前设备、当前浏览器中。清除网站数据会丢失随笔，请定期导出备份。</p>
+<p id="drawer-note" class="writer-note">随笔保存在当前设备、当前浏览器中。清除网站数据会丢失随笔，请定期导出备份。</p>
+<section id="reader" hidden><div class="reader-top"><p id="reader-meta" class="writer-note"></p><button id="edit-note" type="button">编辑这篇随笔</button></div><h2 id="reader-title"></h2><article id="reader-content" class="article-text"></article></section>
 <form id="writer">
 <div class="bar">
 <select id="library" aria-label="选择文章">
@@ -278,7 +279,7 @@
 <article id="preview" hidden>
 </article>
 <div class="actions">
-<button type="button" id="toggle">预览</button>
+<button type="button" id="toggle">预览</button><button type="button" id="read-note" hidden>阅读全文</button>
 
 <button class="primary" type="submit">保存随笔</button>
 <button type="button" id="remove" hidden>删除</button>
@@ -287,7 +288,7 @@
 <p id="status" role="status" aria-live="polite">
 </p>
 </aside>
-<script type="module" src="./app.js?v=private-2">
+<script type="module" src="./app.js?v=reader-1">
 </script>
 </body>
 </html>

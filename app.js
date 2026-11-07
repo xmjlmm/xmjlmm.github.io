@@ -67,17 +67,17 @@ function render() {
   $('journal-next').disabled = journalPage === pageCount - 1;
   $('journal-count').textContent = searching ? '找到 ' + matches.length + ' 篇随笔' : archiveOpen ? '全部随笔 · ' + posts.length + ' 篇' : posts.length > 3 ? '最近 3 篇 · 共 ' + posts.length + ' 篇' : '';
   for (const post of visible) {
-    const details = element('details', '');
-    details.className = 'entry';
-    details.id = 'post-' + post.id;
-    details.open = location.hash === '#' + details.id;
-    const title = element('summary', post.title);
-    title.append(element('small', post.date + '　' + post.category));
-    const article = element('article', '');
-    article.className = 'article-text';
-    prose(article, post.content);
-    details.append(title, article);
-    box.append(details);
+    const row = element('div', '');
+    row.className = 'entry';
+    row.id = 'post-' + post.id;
+    const title = element('button', '');
+    title.type = 'button';
+    title.className = 'entry-open';
+    title.setAttribute('aria-controls', 'drawer');
+    title.append(element('strong', post.title), element('small', post.date + '　' + post.category), element('span', '阅读全文 ↗'));
+    title.onclick = () => openDrawer(post.id, true);
+    row.append(title);
+    box.append(row);
   }
   if (!box.children.length) box.append(element('p', posts.length ? '没有匹配的随笔。' : '第一篇随笔，酝酿中。'));
 }
@@ -107,13 +107,32 @@ function select(post) {
   $('toggle').textContent = '预览';
   $('remove').hidden = !post;
   $('remove').textContent = '删除随笔';
+  $('read-note').hidden = !post;
+  $('drawer-heading').textContent = post ? '编辑随笔' : '写随笔';
   status(post ? '已保存在当前浏览器。' : '');
 }
-function openDrawer() {
+function setReading(reading) {
+  $('reader').hidden = !reading;
+  $('writer').hidden = reading;
+  $('drawer-heading').textContent = reading ? '阅读随笔' : current ? '编辑随笔' : '写随笔';
+  $('drawer-note').hidden = reading;
+  if (reading && current) {
+    $('reader-title').textContent = current.title;
+    $('reader-meta').textContent = current.date + '　' + current.category;
+    prose($('reader-content'), current.content);
+    status('');
+  }
+}
+function openDrawer(id = null, reading = false) {
+  if (busy || dirty && !confirm('放弃未保存的修改？')) return;
+  drafts = readDrafts();
+  rebuildLibrary();
+  const post = library.find(item => item.id === id);
+  select(post);
+  setReading(reading && Boolean(post));
   document.body.classList.add('writing');
   $('drawer').hidden = false;
-  rebuildLibrary();
-  if (!dirty) select(current);
+  $('drawer').scrollTop = 0;
   $('close').focus();
 }
 function closeDrawer() {
@@ -144,8 +163,13 @@ function capture() {
     updatedAt: new Date().toISOString()
   };
 }
-document.querySelectorAll('[data-open]').forEach(button => button.onclick = openDrawer);
+document.querySelectorAll('[data-open]').forEach(button => button.onclick = () => openDrawer());
 $('close').onclick = closeDrawer;
+$('edit-note').onclick = () => { setReading(false); $('title').focus(); };
+$('read-note').onclick = () => {
+  if (dirty) { status('请先保存修改，再阅读完整内容。'); return; }
+  if (current) setReading(true);
+};
 document.addEventListener('keydown', event => { if (event.key === 'Escape' && !$('drawer').hidden) closeDrawer(); });
 $('writer').oninput = event => { if (event.target !== $('library') && event.target !== $('import')) dirty = true; };
 $('library').onchange = () => {
@@ -164,6 +188,7 @@ $('writer').onsubmit = event => {
     saveLocal(post);
     rebuildLibrary();
     select(post);
+    setReading(true);
     status('已保存，可以在主页的随笔区查看。内容保存在当前浏览器。');
   });
 };
@@ -241,5 +266,5 @@ if (linkedIndex >= 3) {
   journalPage = Math.floor(linkedIndex / journalPageSize);
 }
 rebuildLibrary();
-if (location.hash.startsWith('#post-')) document.getElementById(location.hash.slice(1))?.scrollIntoView();
+if (linkedIndex >= 0) openDrawer(location.hash.slice(6), true);
 if (new URLSearchParams(location.search).has('edit')) openDrawer();
