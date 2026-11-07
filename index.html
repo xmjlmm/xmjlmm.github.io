@@ -3,7 +3,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="xu · 徐鸣杰的个人主页。人工智能、机器人、项目实践与日常随笔。">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://api.github.com; object-src 'none'; base-uri 'none'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'self'">
 <meta name="theme-color" content="#faf9f5">
 <title>xu · 徐鸣杰的个人主页</title>
 <link rel="stylesheet" href="./style.css?v=pages-2">
@@ -15,7 +15,7 @@
 <a href="#experience">履历</a>
 <a href="#journal">随笔</a>
 <a href="#contact">联系</a>
-<button data-open="true">写博客</button>
+<button data-open="true">写随笔</button>
 </nav>
 </header>
 <main class="wrap">
@@ -162,7 +162,7 @@
 <h2>写在日常里<span>.</span>
 </h2>
 </div>
-<p>技术之外，也有生活。<br/>一些随笔，一些未完成的想法。</p>
+<p>私人随笔 · 保存在当前浏览器</p>
 </div>
 <label>查找随笔 <input id="search" type="search"/>
 </label>
@@ -223,30 +223,20 @@
 <footer>© xu · 徐鸣杰 <a href="https://github.com/xmjlmm">GitHub ↗</a>
 </footer>
 </div>
-<aside id="drawer" hidden aria-label="博客编辑器">
+<aside id="drawer" hidden aria-label="随笔编辑器">
 <div class="bar">
-<h2>写博客</h2>
+<h2>写随笔</h2>
 <button id="close">关闭</button>
 </div>
-<p class="writer-note">草稿保存在当前浏览器。发布后，访客可在主页阅读。</p>
-<details id="connection">
-<summary id="connection-label">连接 GitHub 以发布</summary>
-<form id="login">
-<p class="writer-note">使用仅授权 xmjlmm.github.io 仓库、具有 Contents 读写权限的细粒度令牌。令牌仅在本次页面打开期间使用。</p>
-<label>GitHub 访问令牌<input type="password" required autocomplete="off" spellcheck="false" id="password" placeholder="github_pat_…">
-</label>
-<button id="connect">连接账号</button>
-<a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">创建令牌 ↗</a>
-</form>
-</details>
+<p class="writer-note">随笔保存在当前设备、当前浏览器中。清除网站数据会丢失随笔，请定期导出备份。</p>
 <form id="writer">
 <div class="bar">
 <select id="library" aria-label="选择文章">
 </select>
 <button type="button" id="backup">导出备份</button>
-<label class="import-button">导入草稿<input id="import" type="file" accept="application/json,.json" hidden>
+<label class="import-button">导入随笔<input id="import" type="file" accept="application/json,.json" hidden>
 </label>
-<button type="button" id="logout" hidden>断开连接</button>
+
 </div>
 <label>标题<input id="title" maxlength="120" required>
 </label>
@@ -263,15 +253,15 @@
 </article>
 <div class="actions">
 <button type="button" id="toggle">预览</button>
-<button value="draft">保存草稿</button>
-<button class="primary" value="publish">发布到主页</button>
+
+<button class="primary" type="submit">保存随笔</button>
 <button type="button" id="remove" hidden>删除</button>
 </div>
 </form>
 <p id="status" role="status" aria-live="polite">
 </p>
 </aside>
-<script type="module" src="./app.js?v=pages-1">
+<script type="module" src="./app.js?v=private-1">
 </script>
 </body>
 </html>
