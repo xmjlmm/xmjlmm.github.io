@@ -78,3 +78,13 @@ nav [aria-current=page]{font-weight:600;text-decoration:underline;text-underline
 .project-expand{display:flex;gap:.4rem;align-items:center;align-self:start;font-size:.78rem;color:var(--green);white-space:nowrap}.project-expand .project-arrow{font-size:1.1rem}.project-collapse-label{display:none}.project[open] .project-expand-label{display:none}.project[open] .project-collapse-label{display:inline}.project[open] .project-arrow{transform:rotate(180deg)}
 .projects .project h3{margin:.3rem 0 .5rem}.projects .project .project-detail{margin:.8rem 0 0;border-top:1px solid var(--line)}
 @media(max-width:740px){.project-layout{grid-template-columns:1fr}.project-categories{position:static;padding:.8rem}.project-category-buttons{display:flex;flex-wrap:wrap;gap:.3rem}.project-category-buttons button{gap:.5rem}.projects .project{padding:1rem}.projects .project summary{grid-template-columns:1fr}.project-expand{justify-self:end}.project-list-heading{margin-bottom:.7rem}}
+
+/* Soft warm background shared by the homepage and journal. */
+:root{--paper:#fbf5ec;--line:#e1d8ca}
+html{min-height:100%;background:#fbf5ec}
+body{min-height:100vh;background:radial-gradient(ellipse at 8% 4%,#f4dfca80 0,transparent 48%),radial-gradient(ellipse at 95% 38%,#f1ddcf60 0,transparent 48%),linear-gradient(160deg,#fcf7ef,#faf1e7);background-attachment:fixed}
+.projects .project,#drawer{background:#fffbf5}
+.project-categories,.honors-details summary,.honors-table th{background:#f4ebde}
+.honors-details summary:hover{background:#eee2d0}
+#drawer .actions{background:#fffbf5}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
