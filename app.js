@@ -6,7 +6,7 @@ let drafts = [];
 let current = null;
 let dirty = false;
 let busy = false;
-let archiveOpen = false;
+let archiveOpen = true;
 let journalPage = 0;
 const journalPageSize = 8;
 const status = message => $('status').textContent = message;
@@ -237,10 +237,6 @@ $('import').onchange = event => run(async () => {
   rebuildLibrary();
   status('已导入 ' + imported.length + ' 篇本机随笔，可在文章列表选择。');
 });
-$('copy').onclick = async () => {
-  try { await navigator.clipboard.writeText('2651094755'); $('copy').textContent = 'QQ　2651094755　已复制'; }
-  catch { $('copy').textContent = 'QQ　2651094755　请手动复制'; }
-};
 function resetJournalPage() {
   journalPage = 0;
   render();
@@ -248,7 +244,7 @@ function resetJournalPage() {
 $('search').oninput = resetJournalPage;
 $('filter').onchange = resetJournalPage;
 $('archive-toggle').onclick = () => {
-  archiveOpen = !archiveOpen;
+  archiveOpen = true;
   resetJournalPage();
 };
 $('journal-prev').onclick = () => { journalPage--; render(); };

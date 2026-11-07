@@ -6,16 +6,16 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'self'">
 <meta name="theme-color" content="#faf9f5">
 <title>xu · 徐鸣杰的个人主页</title>
-<link rel="stylesheet" href="./style.css?v=reader-1">
+<link rel="stylesheet" href="./style.css?v=blog-1">
 <body>
 <div id="top">
 <header>
 <a class="brand" href="#top">xu.</a>
 <nav>
 <a href="#experience">履历</a>
-<a href="#journal">随笔</a>
+<a href="./blog.html">随笔</a>
 <a href="#contact">联系</a>
-<button data-open="true">写随笔</button>
+<a class="nav-write" href="./blog.html?edit">写随笔</a>
 </nav>
 </header>
 <main class="wrap">
@@ -28,7 +28,7 @@
 </h1>
 <p class="intro">徐鸣杰，人工智能与机器人方向。<br/>把想法写进代码，也把日常留在文字里。</p>
 <div class="hero-actions">
-<a class="button dark" href="#journal">读读我的随笔 <span>↗</span>
+<a class="button dark" href="./blog.html">读读我的随笔 <span>↗</span>
 </a>
 <a class="text-button" href="#experience">关于我的经历 <span>↓</span>
 </a>
@@ -178,27 +178,6 @@
 </details>
 </div>
 </section>
-<section class="section" id="journal">
-<div class="section-title">
-<div>
-<h2>写在日常里<span>.</span>
-</h2>
-</div>
-<button data-open="true">写一篇随笔</button>
-</div>
-<label>查找随笔 <input id="search" type="search"/>
-</label>
-<select id="filter" aria-label="分类">
-<option>全部分类</option>
-</select>
-<p id="journal-count" class="writer-note" aria-live="polite"></p>
-<div id="entries" aria-live="polite">
-</div>
-<div id="journal-pagination" class="journal-pagination" hidden aria-label="随笔分页">
-<button id="journal-prev" type="button">上一页</button><span id="journal-page" aria-live="polite"></span><button id="journal-next" type="button">下一页</button>
-</div>
-<div class="journal-actions"><button id="archive-toggle" type="button" aria-expanded="false" aria-controls="entries" hidden>全部随笔</button></div>
-</section>
 <section class="future">
 <div>
 <h2>这里，还会慢慢生长。</h2>
@@ -249,46 +228,4 @@
 <footer>© xu · 徐鸣杰 <a href="https://github.com/xmjlmm">GitHub ↗</a>
 </footer>
 </div>
-<aside id="drawer" hidden aria-label="随笔阅读与编辑">
-<div class="bar">
-<h2 id="drawer-heading">写随笔</h2>
-<button id="close">关闭</button>
-</div>
-<p id="drawer-note" class="writer-note">随笔保存在当前设备、当前浏览器中。清除网站数据会丢失随笔，请定期导出备份。</p>
-<section id="reader" hidden><div class="reader-top"><p id="reader-meta" class="writer-note"></p><button id="edit-note" type="button">编辑这篇随笔</button></div><h2 id="reader-title"></h2><article id="reader-content" class="article-text"></article></section>
-<form id="writer">
-<div class="bar">
-<select id="library" aria-label="选择文章">
-</select>
-<button type="button" id="backup">导出备份</button>
-<label class="import-button">导入随笔<input id="import" type="file" accept="application/json,.json" hidden>
-</label>
-
-</div>
-<label>标题<input id="title" maxlength="120" required>
-</label>
-<div class="pair">
-<label>日期<input id="date" type="date" required>
-</label>
-<label>分类<input id="category" maxlength="24" value="随笔">
-</label>
-</div>
-<label>正文<textarea id="body" maxlength="30000" rows="12">
-</textarea>
-</label>
-<article id="preview" hidden>
-</article>
-<div class="actions">
-<button type="button" id="toggle">预览</button><button type="button" id="read-note" hidden>阅读全文</button>
-
-<button class="primary" type="submit">保存随笔</button>
-<button type="button" id="remove" hidden>删除</button>
-</div>
-</form>
-<p id="status" role="status" aria-live="polite">
-</p>
-</aside>
-<script type="module" src="./app.js?v=reader-1">
-</script>
-</body>
-</html>
+<script type="module" src="./home.js?v=blog-1"></script></body></html>
