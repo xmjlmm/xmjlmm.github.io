@@ -33,3 +33,8 @@
 .honors-table th{font-size:.78rem;font-weight:600}
 .honors-table th,.honors-table td{padding:.65rem .9rem}
 @media(max-width:740px){.honors-details summary{font-size:1rem}.honors-table{font-size:.82rem}.honors-table th{font-size:.78rem}.honors-table th,.honors-table td{padding:.6rem .5rem}}
+
+/* Supporting copy in resume and projects. */
+.timeline-item p:not(.date),.project .muted,.project-detail{font-size:.9rem;line-height:1.85}
+.timeline-item .date,.project .small-label,.project-skills{font-size:.82rem;line-height:1.8}
+.timeline-item .badge{font-size:.8rem}
