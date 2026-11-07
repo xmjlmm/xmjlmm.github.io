@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'self'">
 <meta name="theme-color" content="#faf9f5">
 <title>xu · 徐鸣杰的个人主页</title>
-<link rel="stylesheet" href="./style.css?v=honors-3">
+<link rel="stylesheet" href="./style.css?v=projects-1">
 <body>
 <div id="top">
 <header>
@@ -132,7 +132,13 @@
 </div>
 <span class="project-arrow">↗</span>
 </summary>
-<p class="project-detail">在上海极洞科技实习期间，完成 OV9281 双目视觉预处理与深度图优化，输出达到 10 Hz；配置 Livox AVIA 驱动，参与多模态感知、GPS + RTK 定位、Pure Pursuit 跟踪，以及 Gazebo 软件在环验证。使用 Qt 开发机器人监控界面。</p>
+<div class="project-detail"><ul class="project-points">
+<li><strong>双目视觉工程化</strong><p>基于 OV9281 相机标定参数重构预处理 Pipeline，采用自适应降采样优化视差到深度图的转换，将深度图输出帧率稳定提升至 10 Hz，改善感知数据的实时性。</p></li>
+<li><strong>多传感器接入与融合</strong><p>独立完成 Livox AVIA 激光雷达驱动及启动节点配置；实现毫米波雷达 3D 点云与 2D 视觉特征的空间映射和融合可视化，为复杂光照及动态环境下的障碍物识别提供多模态感知冗余。</p></li>
+<li><strong>定位、循迹与避障</strong><p>基于 GPS + RTK 融合定位，在相对坐标系下构建路径跟踪框架，集成 Pure Pursuit 算法实现循迹控制；以毫米波雷达作为核心感知，设计主动制动和动态绕行策略。</p></li>
+<li><strong>软件在环验证</strong><p>使用 Gazebo 搭建物理仿真环境及集群架构，对感知、决策和控制进行软件在环验证，在实车部署前完成核心逻辑的闭环检查，验证算法可行性与稳定性。</p></li>
+<li><strong>机器人监控界面</strong><p>基于 Qt 自主开发集成监控界面，实时展示多源传感器原始数据和小车运行状态，并提供行为控制仪表盘，支持调试与操作。</p></li>
+</ul></div>
 </details>
 <details class="project">
 <summary>
@@ -145,7 +151,12 @@
 </div>
 <span class="project-arrow">↗</span>
 </summary>
-<p class="project-detail">担任算法岗位，开发辅助瞄准系统与自适应弹道补偿模型；设计双枪管舵轮哨兵自主瞄准系统，完成多线程图像处理、运动控制与串口通信调试。获国家二等奖、东部赛区一等奖。</p>
+<div class="project-detail"><ul class="project-points">
+<li><strong>辅助瞄准与弹道补偿</strong><p>在 RoboMaster 区域赛、联盟赛及国赛中担任算法岗位，负责机器人辅助瞄准系统的开发与调试；设计自适应弹道补偿模型，融合姿态传感数据实时校准弹道。</p></li>
+<li><strong>双枪管哨兵协同</strong><p>设计双枪管舵轮哨兵自主瞄准系统，编写多线程图像处理与运动控制模块，实现动态目标追踪以及双枪管异步协同。</p></li>
+<li><strong>上下位机联调</strong><p>与电控团队协作，测试并调整串口通信，完成上位机与下位机的数据传输，优化实时通信与控制流程。</p></li>
+<li><strong>竞赛成果</strong><p>项目周期为 2023.09—2024.09，随团队获得 RMU 机甲大师高校系列赛国家二等奖、东部赛区一等奖。</p></li>
+</ul></div>
 </details>
 <details class="project">
 <summary>
@@ -158,7 +169,12 @@
 </div>
 <span class="project-arrow">↗</span>
 </summary>
-<p class="project-detail">参与大学生创新创业训练计划项目，完成闸机逻辑设计、程序烧录和票务识别逻辑开发，并撰写项目计划书与成果总结。项目时间：2023.09 — 2024.09。</p>
+<div class="project-detail"><ul class="project-points">
+<li><strong>闸机逻辑设计</strong><p>参与大学生创新创业训练计划，围绕敞开式地铁闸机进行功能逻辑设计，明确闸机程序与票务识别环节的实现逻辑。</p></li>
+<li><strong>程序烧录与票务识别</strong><p>实施闸机程序烧录，搭建并开发票务识别逻辑，基本实现敞开式地铁闸机功能，形成实物成果。</p></li>
+<li><strong>项目文档与成果展示</strong><p>撰写项目计划书，整理项目落地后的论文展示与实物成果总结，完成从方案说明到成果归纳的文档工作。</p></li>
+<li><strong>项目周期</strong><p>2023.09—2024.09。</p></li>
+</ul></div>
 </details>
 </div>
 </section>
