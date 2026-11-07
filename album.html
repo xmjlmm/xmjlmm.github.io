@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="xu · 徐鸣杰的个人主页。人工智能、机器人、项目实践与日常随笔。">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'self'">
+<meta name="theme-color" content="#fbf5ec">
+<title>生活相册 · xu</title>
+<link rel="stylesheet" href="./style.css?v=album-1">
+<body><div id="top"><header><a class="brand" href="./index.html">xu.</a><nav><a href="./index.html#experience">履历</a><a href="./blog.html">随笔</a><a href="./album.html" aria-current="page">相册</a><a href="./index.html#contact">联系</a></nav></header>
+<main class="album-main"><a href="./index.html" class="album-back">← 返回主页</a><div class="section-title"><h1>生活相册<span class="green">.</span></h1><button id="new-album" class="primary">新建相册</button></div>
+<p class="writer-note">照片保存在当前设备、当前浏览器中。清除网站数据会丢失照片，请保留原图。</p>
+<div class="album-layout"><aside class="album-sidebar"><h2>我的相册</h2><div id="album-list"></div></aside>
+<section class="album-content" aria-labelledby="album-title"><div class="album-toolbar"><div><h2 id="album-title">全部照片</h2><p id="photo-count" class="writer-note"></p></div><div class="album-tools"><button id="rename-album" hidden>重命名</button><button id="delete-album" hidden>删除相册</button><button id="add-photos" class="primary">添加照片</button><input id="photo-files" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" multiple hidden></div></div><p id="album-status" role="status" aria-live="polite"></p><div id="photo-grid" class="photo-grid"></div></section></div></main>
+<footer>© xu · 徐鸣杰 <a href="./blog.html">随笔 ↗</a></footer></div>
+<dialog id="album-dialog"><form id="album-form"><h2 id="album-dialog-title">新建相册</h2><label>相册名称<input id="album-name" maxlength="60" required autocomplete="off"></label><div class="album-tools"><button type="button" id="cancel-album">取消</button><button class="primary" type="submit">保存</button></div><p id="album-form-status" role="status"></p></form></dialog>
+<dialog id="photo-viewer"><div class="viewer-toolbar"><p id="viewer-position"></p><div class="album-tools"><a id="download-photo" class="button" download>保存原图</a><button id="remove-photo">删除照片</button><button id="close-viewer">关闭</button></div></div><img id="viewer-image" alt=""><p id="viewer-caption"></p><div class="viewer-navigation"><button id="previous-photo">← 上一张</button><button id="next-photo">下一张 →</button></div></dialog>
+<script type="module" src="./album.js?v=album-1"></script></body></html>
