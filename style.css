@@ -38,3 +38,11 @@
 .timeline-item p:not(.date),.project .muted,.project-detail{font-size:.9rem;line-height:1.85}
 .timeline-item .date,.project .small-label,.project-skills{font-size:.82rem;line-height:1.8}
 .timeline-item .badge{font-size:.8rem}
+
+.honors-details summary{padding:.75rem 1rem;background:#eef1e9;border:1px solid var(--line);border-radius:5px;gap:1rem}
+.honors-details summary:hover{background:#e6ecdf;border-color:#a4b39c}
+.honors-heading,.honors-affordance{display:inline-flex;align-items:center;gap:.6rem}
+.honors-icon{flex-shrink:0;color:var(--green)}
+.honors-affordance{font-size:.82rem;font-weight:400;color:var(--green);white-space:nowrap}
+.honors-chevron{font-size:1.25rem;line-height:1;transition:transform .15s}
+.honors-close-label{display:none}.honors-details[open] .honors-open-label{display:none}.honors-details[open] .honors-close-label{display:inline}.honors-details[open] .honors-chevron{transform:rotate(180deg)}
