@@ -67,3 +67,14 @@ nav [aria-current=page]{font-weight:600;text-decoration:underline;text-underline
 .blog-page #archive-toggle{display:none}.blog-page .journal-actions{display:none}
 .blog-page.writing .blog-layout{grid-template-columns:1fr}.blog-page.writing .blog-directory{display:none}
 @media(max-width:740px){.blog-layout{grid-template-columns:1fr;padding:2rem 0;gap:1.5rem}.blog-directory{position:static;display:flex;justify-content:space-between}.blog-main .section-title{display:flex}.blog-main .section-title h2{font-size:1.5rem}}
+
+.project-layout{display:grid;grid-template-columns:175px minmax(0,1fr);gap:1.5rem;align-items:start}
+.project-categories{border:1px solid var(--line);border-radius:8px;padding:1rem;position:sticky;top:1.5rem;background:#f2f4ed}
+.project-categories h3{font-size:.94rem;margin-bottom:.8rem}
+.project-category-buttons{display:grid;gap:.4rem}.project-category-buttons button{display:flex;justify-content:space-between;gap:1rem;border:0;background:transparent;text-align:left;font-size:.88rem;padding:.5rem .6rem}
+.project-category-buttons button[aria-pressed=true]{background:var(--green);color:white}.project-category-buttons button span{opacity:.75}
+.project-results{min-width:0}.project-list-heading{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem}.project-list-heading h3{font-size:1rem}.project-list-heading>span{font-size:.82rem;color:var(--soft)}
+.projects{display:grid;gap:1rem}.projects .project{border:1px solid var(--line);border-radius:8px;background:#fffefb;padding:1.2rem;overflow:hidden}.projects .project summary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1rem;list-style:none}.projects .project summary::-webkit-details-marker{display:none}
+.project-expand{display:flex;gap:.4rem;align-items:center;align-self:start;font-size:.78rem;color:var(--green);white-space:nowrap}.project-expand .project-arrow{font-size:1.1rem}.project-collapse-label{display:none}.project[open] .project-expand-label{display:none}.project[open] .project-collapse-label{display:inline}.project[open] .project-arrow{transform:rotate(180deg)}
+.projects .project h3{margin:.3rem 0 .5rem}.projects .project .project-detail{margin:.8rem 0 0;border-top:1px solid var(--line)}
+@media(max-width:740px){.project-layout{grid-template-columns:1fr}.project-categories{position:static;padding:.8rem}.project-category-buttons{display:flex;flex-wrap:wrap;gap:.3rem}.project-category-buttons button{gap:.5rem}.projects .project{padding:1rem}.projects .project summary{grid-template-columns:1fr}.project-expand{justify-self:end}.project-list-heading{margin-bottom:.7rem}}
