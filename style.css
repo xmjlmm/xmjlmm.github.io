@@ -26,3 +26,10 @@
 .journal-actions,.journal-pagination{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-top:1rem}.journal-pagination{margin-bottom:1rem}#journal-count:empty{display:none}#archive-toggle{background:transparent;color:var(--green)}
 
 .honors-details{padding:1rem 0}.honors-details summary{display:flex;align-items:center;justify-content:space-between;list-style:none;font-weight:600}.honors-details summary::-webkit-details-marker{display:none}.honors-toggle::before{content:'＋';font-weight:400;color:var(--green)}.honors-details[open] .honors-toggle::before{content:'−'}.honors-table-wrap{margin-top:1rem;overflow-x:auto}.honors-table{width:100%;border-collapse:collapse;text-align:left;font-size:.94rem;line-height:1.7}.honors-table th{font-weight:500;color:var(--soft);background:#eef1e9}.honors-table th,.honors-table td{padding:.8rem 1rem;border-bottom:1px solid var(--line);vertical-align:top}.honors-table th:first-child{width:62%}.honors-table tbody tr:last-child td{border-bottom:0}@media(max-width:740px){.honors-table{font-size:.9rem}.honors-table th,.honors-table td{padding:.7rem .5rem}.honors-table th:first-child{width:58%}}
+
+/* Distinguish the honors heading from supporting table text. */
+.honors-details summary{font-size:1.06rem;font-weight:600}
+.honors-table{font-size:.82rem;line-height:1.75}
+.honors-table th{font-size:.78rem;font-weight:600}
+.honors-table th,.honors-table td{padding:.65rem .9rem}
+@media(max-width:740px){.honors-details summary{font-size:1rem}.honors-table{font-size:.82rem}.honors-table th{font-size:.78rem}.honors-table th,.honors-table td{padding:.6rem .5rem}}
