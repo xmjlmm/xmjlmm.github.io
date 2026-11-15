@@ -1,3 +1,4 @@
+import {createNoteEditor, renderNote, renderFormula} from './editor/note-editor.js';
 const $ = id => document.getElementById(id);
 const storageKey = 'xu.github-pages.drafts.v1';
 let posts = [];
@@ -32,18 +33,16 @@ function element(tag, text) {
   node.textContent = text;
   return node;
 }
-function prose(node, text) {
-  node.replaceChildren();
-  for (const line of text.split('\n')) {
-    const match = line.match(/^(#{1,3}|>|-) (.*)$/);
-    let tag = 'p';
-    let content = line || ' ';
-    if (match) {
-      tag = match[1] === '>' ? 'blockquote' : match[1] === '-' ? 'p' : 'h3';
-      content = (match[1] === '-' ? '• ' : '') + match[2];
-    }
-    node.append(element(tag, content));
-  }
+let noteEditor;
+let loadingEditor = false;
+function noteMarkdown(post) {
+  const text = post?.content || '';
+  return post?.contentFormat === 'markdown' ? text : text.replaceAll('&', '&amp;').replaceAll('<', '&lt;');
+}
+function prose(node, text) { renderNote(node, text); }
+function ensureEditor() {
+  if (!noteEditor) noteEditor = createNoteEditor($('rich-editor'), () => { if (!loadingEditor) dirty = true; }, status);
+  return noteEditor;
 }
 function sortPosts(items) {
   return items.sort((a, b) => b.date.localeCompare(a.date) || b.updatedAt.localeCompare(a.updatedAt));
@@ -99,11 +98,12 @@ function select(post) {
   dirty = false;
   $('library').value = post?.id || '';
   $('title').value = post?.title || '';
-  $('body').value = post?.content || '';
+  loadingEditor = true;
+  try { ensureEditor().setMarkdown(noteMarkdown(post), false); } finally { loadingEditor = false; }
   $('category').value = post?.category || '随笔';
   $('date').value = post?.date || new Intl.DateTimeFormat('en-CA', {timeZone: 'Asia/Shanghai'}).format(new Date());
   $('preview').hidden = true;
-  $('body').hidden = false;
+  $('editor-area').hidden = false;
   $('toggle').textContent = '预览';
   $('remove').hidden = !post;
   $('remove').textContent = '删除随笔';
@@ -119,7 +119,7 @@ function setReading(reading) {
   if (reading && current) {
     $('reader-title').textContent = current.title;
     $('reader-meta').textContent = current.date + '　' + current.category;
-    prose($('reader-content'), current.content);
+    prose($('reader-content'), noteMarkdown(current));
     status('');
   }
 }
@@ -158,7 +158,7 @@ async function run(action) {
 function capture() {
   return {
     id: current?.id || crypto.randomUUID(),
-    title: $('title').value.trim(), content: $('body').value,
+    title: $('title').value.trim(), content: ensureEditor().getMarkdown(), contentFormat: 'markdown',
     date: $('date').value, category: $('category').value.trim() || '随笔',
     updatedAt: new Date().toISOString()
   };
@@ -184,6 +184,7 @@ $('writer').onsubmit = event => {
     const existing = drafts.find(post => post.id === current?.id);
     if (current && existing?.updatedAt !== current.updatedAt) throw Error('这篇随笔已在另一窗口修改或删除，请先导出当前文字备份，再重新选择文章。');
     const post = capture();
+    if (post.content.length > 2500000) throw Error('随笔过大，请减少图片后保存。');
     if (!post.title || !post.date) throw Error('请填写标题和日期。');
     saveLocal(post);
     rebuildLibrary();
@@ -194,9 +195,9 @@ $('writer').onsubmit = event => {
 };
 $('toggle').onclick = () => {
   const show = $('preview').hidden;
-  prose($('preview'), $('body').value);
+  prose($('preview'), ensureEditor().getMarkdown());
   $('preview').hidden = !show;
-  $('body').hidden = show;
+  $('editor-area').hidden = show;
   $('toggle').textContent = show ? '继续编辑' : '预览';
 };
 $('remove').onclick = () => {
@@ -229,10 +230,10 @@ $('import').onchange = event => run(async () => {
   const file = event.target.files[0];
   event.target.value = '';
   if (!file) return;
-  if (file.size > 5000000) throw Error('备份文件应小于 5 MB。');
+  if (file.size > 20000000) throw Error('备份文件应小于 20 MB。');
   const items = JSON.parse(await file.text());
-  if (!Array.isArray(items) || items.some(item => typeof item.title !== 'string' || item.title.length > 120 || typeof item.content !== 'string' || item.content.length > 30000 || !/^\d{4}-\d{2}-\d{2}$/.test(item.date))) throw Error('备份格式不正确。');
-  const imported = items.map(item => ({id: crypto.randomUUID(), title: item.title, content: item.content, date: item.date, category: typeof item.category === 'string' ? item.category.slice(0, 24) : '随笔', published: false, updatedAt: new Date().toISOString(), baseUpdatedAt: null}));
+  if (!Array.isArray(items) || items.some(item => typeof item.title !== 'string' || item.title.length > 120 || typeof item.content !== 'string' || item.content.length > 2500000 || !/^\d{4}-\d{2}-\d{2}$/.test(item.date))) throw Error('备份格式不正确。');
+  const imported = items.map(item => ({id: crypto.randomUUID(), title: item.title, content: item.content, contentFormat: item.contentFormat === 'markdown' ? 'markdown' : 'plain', date: item.date, category: typeof item.category === 'string' ? item.category.slice(0, 24) : '随笔', published: false, updatedAt: new Date().toISOString(), baseUpdatedAt: null}));
   storeDrafts([...readDrafts(), ...imported]);
   rebuildLibrary();
   status('已导入 ' + imported.length + ' 篇本机随笔，可在文章列表选择。');
@@ -264,3 +265,21 @@ if (linkedIndex >= 3) {
 rebuildLibrary();
 if (linkedIndex >= 0) openDrawer(location.hash.slice(6), true);
 if (new URLSearchParams(location.search).has('edit')) openDrawer();
+
+$('insert-formula').onclick = () => {
+  $('formula-input').value = String.raw`\sum_{i=1}^{n} a_i`;
+  renderFormula($('formula-preview'), $('formula-input').value);
+  $('formula-dialog').showModal();
+  $('formula-input').focus();
+};
+$('formula-input').oninput = () => renderFormula($('formula-preview'), $('formula-input').value);
+$('formula-cancel').onclick = () => $('formula-dialog').close();
+$('formula-form').onsubmit = event => {
+  event.preventDefault();
+  const latex = $('formula-input').value.trim();
+  if (!latex || latex.includes('$$') || !renderFormula($('formula-preview'), latex)) return;
+  const editor = ensureEditor();
+  editor.setMarkdown(editor.getMarkdown() + '\n\n$$latex\n' + latex + '\n$$\n');
+  dirty = true;
+  $('formula-dialog').close();
+};
