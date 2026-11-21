@@ -1,6 +1,7 @@
+import {readDrafts, saveDraft, importDrafts} from './note-storage.js';
 import {createNoteEditor, renderNote, renderFormula} from './editor/note-editor.js';
 const $ = id => document.getElementById(id);
-const storageKey = 'xu.github-pages.drafts.v1';
+const noteUpdates = new BroadcastChannel('xu-journal-updates');
 let posts = [];
 let library = [];
 let drafts = [];
@@ -12,22 +13,6 @@ let journalPage = 0;
 const journalPageSize = 8;
 const status = message => $('status').textContent = message;
 
-function readDrafts() {
-  const saved = JSON.parse(localStorage.getItem(storageKey) || '[]');
-  if (!Array.isArray(saved)) throw Error('随笔格式有误，请先导出浏览器数据。');
-  return saved;
-}
-function storeDrafts(next) {
-  localStorage.setItem(storageKey, JSON.stringify(next));
-  drafts = next;
-}
-function saveLocal(post) {
-  const next = drafts.filter(item => item.id !== post.id);
-  next.push(post);
-  storeDrafts(next);
-  current = post;
-  dirty = false;
-}
 function element(tag, text) {
   const node = document.createElement(tag);
   node.textContent = text;
@@ -125,7 +110,6 @@ function setReading(reading) {
 }
 function openDrawer(id = null, reading = false) {
   if (busy || dirty && !confirm('放弃未保存的修改？')) return;
-  drafts = readDrafts();
   rebuildLibrary();
   const post = library.find(item => item.id === id);
   select(post);
@@ -149,7 +133,7 @@ async function run(action) {
   const disabledStates = controls.map(control => control.disabled);
   controls.forEach(control => control.disabled = true);
   try { await action(); }
-  catch (error) { status(error.name === 'QuotaExceededError' ? '浏览器存储空间不足，请先导出备份。当前编辑内容仍在，请勿关闭页面。' : error.message); }
+  catch (error) { status(error.name === 'QuotaExceededError' ? '设备分配给浏览器的存储空间已用完。请先导出备份，当前编辑内容仍在。' : error.message); }
   finally {
     busy = false;
     controls.forEach((control, index) => control.disabled = disabledStates[index]);
@@ -179,14 +163,12 @@ $('library').onchange = () => {
 $('writer').onsubmit = event => {
   event.preventDefault();
   run(async () => {
-    // Read the latest storage before merging to preserve other windows' saved notes.
-    drafts = readDrafts();
-    const existing = drafts.find(post => post.id === current?.id);
-    if (current && existing?.updatedAt !== current.updatedAt) throw Error('这篇随笔已在另一窗口修改或删除，请先导出当前文字备份，再重新选择文章。');
     const post = capture();
-    if (post.content.length > 2500000) throw Error('随笔过大，请减少图片后保存。');
     if (!post.title || !post.date) throw Error('请填写标题和日期。');
-    saveLocal(post);
+    await saveDraft(post, current);
+    dirty = false;
+    drafts = await readDrafts();
+    noteUpdates.postMessage('changed');
     rebuildLibrary();
     select(post);
     setReading(true);
@@ -203,10 +185,9 @@ $('toggle').onclick = () => {
 $('remove').onclick = () => {
   if (!current || busy || !confirm('删除这篇本机随笔？建议先导出备份。')) return;
   run(async () => {
-    const latest = readDrafts();
-    const existing = latest.find(post => post.id === current.id);
-    if (existing && existing.updatedAt !== current.updatedAt) throw Error('这篇随笔已在另一窗口修改，请重新选择后核对。');
-    storeDrafts(latest.filter(item => item.id !== current.id));
+    await saveDraft(current, current, true);
+    drafts = await readDrafts();
+    noteUpdates.postMessage('changed');
     current = null;
     rebuildLibrary();
     select(null);
@@ -230,13 +211,14 @@ $('import').onchange = event => run(async () => {
   const file = event.target.files[0];
   event.target.value = '';
   if (!file) return;
-  if (file.size > 20000000) throw Error('备份文件应小于 20 MB。');
   const items = JSON.parse(await file.text());
-  if (!Array.isArray(items) || items.some(item => typeof item.title !== 'string' || item.title.length > 120 || typeof item.content !== 'string' || item.content.length > 2500000 || !/^\d{4}-\d{2}-\d{2}$/.test(item.date))) throw Error('备份格式不正确。');
+  if (!Array.isArray(items) || items.some(item => !item || typeof item.title !== 'string' || item.title.length > 120 || typeof item.content !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(item.date))) throw Error('备份格式不正确。');
   const imported = items.map(item => ({id: crypto.randomUUID(), title: item.title, content: item.content, contentFormat: item.contentFormat === 'markdown' ? 'markdown' : 'plain', date: item.date, category: typeof item.category === 'string' ? item.category.slice(0, 24) : '随笔', published: false, updatedAt: new Date().toISOString(), baseUpdatedAt: null}));
-  storeDrafts([...readDrafts(), ...imported]);
+  const count = await importDrafts(imported);
+  drafts = await readDrafts();
+  noteUpdates.postMessage('changed');
   rebuildLibrary();
-  status('已导入 ' + imported.length + ' 篇本机随笔，可在文章列表选择。');
+  status('已导入 ' + count + ' 篇本机随笔，可在文章列表选择。');
 });
 function resetJournalPage() {
   journalPage = 0;
@@ -252,11 +234,15 @@ $('journal-prev').onclick = () => { journalPage--; render(); };
 $('journal-next').onclick = () => { journalPage++; render(); };
 
 window.addEventListener('beforeunload', event => { if (dirty || busy) { event.preventDefault(); event.returnValue = ''; } });
-window.addEventListener('storage', event => {
-  if (event.key !== storageKey) return;
-  try { drafts = readDrafts(); rebuildLibrary(); status('另一窗口更新了随笔。请核对后继续编辑。'); } catch (error) { status(error.message); }
-});
-try { drafts = readDrafts(); } catch (error) { status('浏览器随笔读取失败：' + error.message); }
+noteUpdates.onmessage = async () => {
+  try { drafts = await readDrafts(); rebuildLibrary(); }
+  catch (error) { status(error.message); }
+};
+try { drafts = await readDrafts(); }
+catch (error) {
+  $('journal-count').textContent = '随笔存储打开失败：' + error.message;
+  throw error;
+}
 const linkedIndex = sortPosts([...drafts]).findIndex(post => '#post-' + post.id === location.hash);
 if (linkedIndex >= 3) {
   archiveOpen = true;
